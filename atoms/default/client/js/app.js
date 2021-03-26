@@ -43,7 +43,7 @@ function init(results) {
 
 	var width = document.querySelector("#graphicContainer").getBoundingClientRect().width
 	var height = width*0.6				
-	var margin = {top: 20, right: 80, bottom: 20, left:40}
+	var margin = {top: 20, right: 70, bottom: 20, left:40}
 	var dateParse = d3.timeParse(details[0]['dateFormat'])
 
 	var scaleFactor = 1
@@ -59,7 +59,7 @@ function init(results) {
 
 	function getLongestKeyLength(isMob) {
 		if (!isMob) {		
-		return 200
+		return 50
 		}
 		return 0
 	  }
@@ -69,10 +69,10 @@ function init(results) {
 	width = width - margin.left - margin.right,
     height = height - margin.top - margin.bottom;
 
-
+    console.log(margin)
 
 	context.select("#chartTitle").text(details[0].title)
-    context.select("#subTitle").text(details[0].subtitle)
+    context.select("#subTitle").html(details[0].subtitle)
     context.select("#sourceText").html(details[0].source)
     context.select("#footnote").html(details[0].footnote)
     context.select("#graphicContainer svg").remove();
@@ -460,7 +460,7 @@ function init(results) {
         	labelY1 = y(d.y)
         	labelY2 = y(d.y)
         	textX = x(d.x) + (d.offset * scaleFactor) + margin.left + 5
-        	textY = y(d.y) + margin.top - 40
+        	textY = y(d.y) + margin.top - 12
         	mobileYOffset = 4
         }
 
@@ -544,9 +544,6 @@ function init(results) {
 
 
 	})  
-
-
-	 
 
 
 	// firstRun = false
