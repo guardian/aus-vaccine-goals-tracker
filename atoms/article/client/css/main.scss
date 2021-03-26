@@ -9,6 +9,22 @@
     padding: 0;
 
     #vaccineGoals {
-    	#chartKey { display: none }
+
+    	/*.annotationBox {
+    		background-color: red;
+    	}*/
+
+    	.annotationBox.left {
+    		text-align: right;
+    	}
+
+    	.annotationBox.right {
+    		text-align: left;
+    	}
+
+    	.annotationBox.middle {
+    		text-align: center;
+    	}
+ 
     }
 }

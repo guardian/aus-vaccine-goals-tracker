@@ -2,7 +2,6 @@ import * as d3 from "d3"
 
 function init(results) {
 	const container = d3.select("#vaccineGoals #graphicContainer")
-	// console.log(results)
 	var clone = clone = JSON.parse(JSON.stringify(results));
 	var data = clone.sheets.data
 	var details = clone.sheets.template
@@ -69,7 +68,7 @@ function init(results) {
 	width = width - margin.left - margin.right,
     height = height - margin.top - margin.bottom;
 
-    console.log(margin)
+
 
 	context.select("#chartTitle").text(details[0].title)
     context.select("#subTitle").html(details[0].subtitle)
@@ -79,7 +78,6 @@ function init(results) {
     
     var chartKey = context.select("#chartKey");
 	chartKey.html("");
-
 
 	var svg = context.select("#graphicContainer").append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -250,7 +248,6 @@ function init(results) {
 
 
 	var areaData = data.filter(d => {return d[xVar] <= keyData[keys[0]][keyData[keys[0]].length - 1][xVar]})
-
 
 	// console.log("areaData", areaData)
 
@@ -434,14 +431,6 @@ function init(results) {
           })
 
 		  }
-
-
-
-
-
-
-
-
        
 
 	});	
@@ -449,6 +438,29 @@ function init(results) {
 	context.selectAll(".annotationBox").remove()
 	var footerAnnotations = context.select("#footerAnnotations")
     footerAnnotations.html("")
+
+    var textBoxWidth = 220 * scaleFactor
+
+
+    var dummyTextBox = container
+        .append("div")
+        .attr("class", `annotationBox`)
+        .attr("id", "dummyTextBox")
+        .style("position", "absolute")
+        .style("width", textBoxWidth + "px")
+        .style("top", 20)
+        .style("left", -2000)
+        .style("opacity", 0)
+        .style("pointer-events", "none")
+
+    function getTextBoxSize(boxWidth, text) {
+	    dummyTextBox.text("")
+	    dummyTextBox.attr("width", boxWidth + "px")
+	    dummyTextBox.text(text)
+	    console.log(dummyTextBox.node().getBoundingClientRect())
+	    return dummyTextBox.node().getBoundingClientRect()
+	}
+
 
 	 labels.forEach( (d,i) => {
 
@@ -465,13 +477,27 @@ function init(results) {
         }
 
         else if (d.direction === "top") {
+
         	labelX1 = x(d.x)
         	labelX2 = x(d.x)
         	labelY1 = y(d.y) - (d.offset * scaleFactor)
         	labelY2 = y(d.y) - 6
-        	textX = x(d.x) + margin.left - (80 * scaleFactor)
-        	textY = y(d.y) - (d.offset * scaleFactor) + margin.top - 40
+  			textX = x(d.x) + margin.left - (textBoxWidth /2)
+        	textY = y(d.y) - (d.offset * scaleFactor) + margin.top - getTextBoxSize(textBoxWidth, d.text).height - 5
         	mobileYOffset = 0
+
+        	if (d.align === "middle") {
+        		textX = x(d.x) + margin.left - (textBoxWidth /2)
+        	}
+
+        	else if (d.align === "left") {
+        		textX = x(d.x) + margin.left - (textBoxWidth)
+        	}
+
+        	else if (d.align === "right") {
+        		textX = x(d.x) + margin.left - 10
+        	}
+        	
         }
 
 		features
@@ -533,9 +559,9 @@ function init(results) {
 
 	container
         .append("div")
-        .attr("class", "annotationBox")
+        .attr("class", `annotationBox ${d.align}`)
         .style("position", "absolute")
-        .style("width", 250 * scaleFactor + "px")
+        .style("width", textBoxWidth + "px")
         .style("top", textY + "px")
         .style("left", textX + "px")
         .text(d.text)
@@ -544,6 +570,9 @@ function init(results) {
 
 
 	})  
+
+
+	 
 
 
 	// firstRun = false
