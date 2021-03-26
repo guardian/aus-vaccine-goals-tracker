@@ -2,7 +2,7 @@ import * as d3 from "d3"
 
 function init(results) {
 	const container = d3.select("#vaccineGoals #graphicContainer")
-	console.log(results)
+	// console.log(results)
 	var clone = clone = JSON.parse(JSON.stringify(results));
 	var data = clone.sheets.data
 	var details = clone.sheets.template
@@ -10,6 +10,7 @@ function init(results) {
 	var userKey = clone['sheets']['key']
 	var breaks = "no"
 	var context = d3.select("#vaccineGoals")
+
 
 	function numberFormat(num) {
         if ( num > 0 ) {
@@ -42,7 +43,7 @@ function init(results) {
 
 	var width = document.querySelector("#graphicContainer").getBoundingClientRect().width
 	var height = width*0.6				
-	var margin = {top: 20, right: 80, bottom: 20, left:40}
+	var margin = {top: 20, right: 70, bottom: 20, left:40}
 	var dateParse = d3.timeParse(details[0]['dateFormat'])
 
 	var scaleFactor = 1
@@ -51,19 +52,34 @@ function init(results) {
 		scaleFactor = windowWidth / 860
 	}
 
-	console.log("scaleFactor",scaleFactor)
+	// console.log("scaleFactor",scaleFactor)
 
+
+	var keys = Object.keys(data[0])
+
+	function getLongestKeyLength(isMob) {
+		if (!isMob) {		
+		return 50
+		}
+		return 0
+	  }
+
+	margin.right += getLongestKeyLength(isMobile)
+	
 	width = width - margin.left - margin.right,
     height = height - margin.top - margin.bottom;
 
+    console.log(margin)
+
 	context.select("#chartTitle").text(details[0].title)
-    context.select("#subTitle").text(details[0].subtitle)
+    context.select("#subTitle").html(details[0].subtitle)
     context.select("#sourceText").html(details[0].source)
     context.select("#footnote").html(details[0].footnote)
     context.select("#graphicContainer svg").remove();
     
     var chartKey = context.select("#chartKey");
 	chartKey.html("");
+
 
 	var svg = context.select("#graphicContainer").append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -72,8 +88,6 @@ function init(results) {
 				.attr("overflow", "hidden");					
 
 	var features = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	var keys = Object.keys(data[0])
 
 
 	var xVar;
@@ -90,7 +104,10 @@ function init(results) {
 	
 	// console.log(xVar, keys);
 
-	var colors = ["rgb(204, 10, 17)","#ff7f00"];
+	var colors = ["#d10a10", "#cccccc", "#ea5a0b"];
+
+	
+	
 
 	var color = d3.scaleOrdinal();
 
@@ -98,23 +115,23 @@ function init(results) {
 	
 	// console.log(color.domain())
 
-	keys.forEach(function(key,i) { 
+	// keys.forEach(function(key,i) { 
 
-		var keyDiv = chartKey.append("div")
-						.attr("class","keyDiv")
+	// 	var keyDiv = chartKey.append("div")
+	// 					.attr("class","keyDiv")
 
-		keyDiv.append("span")
-			.attr("class", "keyCircle")
-			.style("background-color", function() {
-					return color(key);
-				}
-			)
+	// 	keyDiv.append("span")
+	// 		.attr("class", "keyCircle")
+	// 		.style("background-color", function() {
+	// 				return color(key);
+	// 			}
+	// 		)
 
-		keyDiv.append("span")
-			.attr("class", "keyText")
-			.text(key)
+	// 	keyDiv.append("span")
+	// 		.attr("class", "keyText")
+	// 		.text(key)
 
-	})
+	// })
 
 	// data.forEach(function(d) {
 
@@ -234,6 +251,7 @@ function init(results) {
 
 	var areaData = data.filter(d => {return d[xVar] <= keyData[keys[0]][keyData[keys[0]].length - 1][xVar]})
 
+
 	// console.log("areaData", areaData)
 
 	const area = d3.area()
@@ -243,7 +261,7 @@ function init(results) {
       	return y(d[keys[0]])
 
       	})
-      .y1((d) => y(d[keys[1]]))
+      .y1((d) => y(d[keys[2]]))
 
 	// console.log("keyData",keyData)
 
@@ -375,6 +393,26 @@ function init(results) {
           .attr("r", 4)
           .style("opacity", 1)	
 
+
+
+		  if (isMobile) {
+
+				var keyDiv = chartKey
+								.append("div")
+								.attr("class","keyDiv")
+		
+				keyDiv.append("span")
+					.attr("class", "keyCircle")
+					.style("background-color", function() {
+							return color(key);
+						}
+					)
+		
+				keyDiv.append("span")
+					.attr("class", "keyText")
+					.text(key)
+				console.log(key)
+		  } else {
         features
           .append("text")
           .attr("class", "lineLabels")
@@ -394,6 +432,12 @@ function init(results) {
           .text((d) => {
             return key
           })
+
+		  }
+
+
+
+
 
 
 
@@ -416,7 +460,7 @@ function init(results) {
         	labelY1 = y(d.y)
         	labelY2 = y(d.y)
         	textX = x(d.x) + (d.offset * scaleFactor) + margin.left + 5
-        	textY = y(d.y) + margin.top - 40
+        	textY = y(d.y) + margin.top - 12
         	mobileYOffset = 4
         }
 
@@ -502,9 +546,6 @@ function init(results) {
 	})  
 
 
-	 
-
-
 	// firstRun = false
 
 }	// end init
@@ -512,7 +553,7 @@ function init(results) {
 
 
 Promise.all([
-	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/Covid-19_oz_vaccine_tracker_4m_gap.json`)
+	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/Covid_oz_vac_gap_two_goals_feed.json`)
 	])
 	.then((results) =>  {
 		init(results[0])
