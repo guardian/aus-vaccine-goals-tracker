@@ -102,7 +102,7 @@ function init(results) {
 	
 	// console.log(xVar, keys);
 
-	var colors = ["#d10a10", "#cccccc", "#ea5a0b"];
+	var colors = ["#d10a10", "#61c3d9", "#ea5a0b", "#787878"];
 
 	
 	
@@ -365,6 +365,41 @@ function init(results) {
 	keys.forEach(function(key,i) {
 
 		// console.log(keyData[key])
+		console.log(key, color(key))
+	
+		// Make line for the trend
+
+		if (key == "7 day trend"){
+		
+		features.append("path")
+			.datum(keyData[key])
+			.attr("fill", "none")
+			.attr("stroke-dasharray","5,5")
+			.attr("stroke", function (d) { 
+				return color(key);
+			})
+			// .attr("stroke-linejoin", "round")
+			.attr("stroke-linecap", "round")
+			.attr("stroke-width", 3)
+			.style("opacity", 0.3)
+			.attr("d", lineGenerators[key]);
+
+
+		features
+          .append("circle")
+          .attr("cy", (d) => {
+            return y(keyData[key][keyData[key].length - 1][key])
+          })
+          .attr("fill", color(key))
+          .attr("cx", (d) => {
+            return x(keyData[key][keyData[key].length - 1][xVar])
+          })
+          .attr("r", 4)
+          .style("opacity", 1)
+
+		} else {
+
+		// Make all the other lines 
 
 		features.append("path")
 			.datum(keyData[key])
@@ -390,7 +425,7 @@ function init(results) {
           .attr("r", 4)
           .style("opacity", 1)	
 
-
+		}
 
 		  if (isMobile) {
 
@@ -408,7 +443,7 @@ function init(results) {
 				keyDiv.append("span")
 					.attr("class", "keyText")
 					.text(key)
-				console.log(key)
+				// console.log(key)
 		  } else {
         features
           .append("text")
@@ -582,7 +617,7 @@ function init(results) {
 
 
 Promise.all([
-	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/Covid_oz_vac_gap_two_goals_feed.json`)
+	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/Covid-19_oz_vaccine_tracker_4m_rolling_TEST.json`)
 	])
 	.then((results) =>  {
 		init(results[0])
