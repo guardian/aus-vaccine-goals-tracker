@@ -395,7 +395,7 @@ function init(results) {
 					return x(keyData[key][keyData[key].length - 1][xVar])
 				  })
 				  .attr("r", 4)
-				  .style("opacity", 1)
+				  .style("opacity", 0.3)
 		
 				} else {
 		
@@ -427,7 +427,7 @@ function init(results) {
 		
 				}
 		
-				  if (isMobile) {
+				//   if (isMobile) {
 		
 						var keyDiv = chartKey
 										.append("div")
@@ -444,28 +444,28 @@ function init(results) {
 							.attr("class", "keyText")
 							.text(key)
 						// console.log(key)
-				  } else {
-				features
-				  .append("text")
-				  .attr("class", "lineLabels")
-				  .attr("y", (d) => {
-					return (
-					  y(keyData[key][keyData[key].length - 1][key]) +
-					  4 
-					)
-				  })
-				  .attr("x", (d) => {
-					return (
-					  x(keyData[key][keyData[key].length - 1][xVar]) + 5
-					)
-				  })
-				  .style("opacity", 1)
-				  .attr("fill", color(key))
-				  .text((d) => {
-					return key
-				  })
+				//   } else {
+				// features
+				//   .append("text")
+				//   .attr("class", "lineLabels")
+				//   .attr("y", (d) => {
+				// 	return (
+				// 	  y(keyData[key][keyData[key].length - 1][key]) +
+				// 	  4 
+				// 	)
+				//   })
+				//   .attr("x", (d) => {
+				// 	return (
+				// 	  x(keyData[key][keyData[key].length - 1][xVar]) + 5
+				// 	)
+				//   })
+				//   .style("opacity", 1)
+				//   .attr("fill", color(key))
+				//   .text((d) => {
+				// 	return key
+				//   })
 		
-				  }
+				//   }
 			   
 		
 			});	
