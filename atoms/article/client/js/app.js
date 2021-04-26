@@ -102,7 +102,9 @@ function init(results) {
 	
 	// console.log(xVar, keys);
 
-	var colors = ["#d10a10", "#cccccc", "#ea5a0b"];
+	var colors = ["#d10a10", "#ea5a0b", "#cccccc","#adadad", "#d10a10"];
+
+	// var colors = ["#0099db", "#cccccc", "#cccccc","#cccccc", "#0099db"];
 
 	
 	
@@ -246,10 +248,11 @@ function init(results) {
 		});
 	})	
 
-
-	var areaData = data.filter(d => {return d[xVar] <= keyData[keys[0]][keyData[keys[0]].length - 1][xVar]})
-
-	// console.log("areaData", areaData)
+	var shorter_data = data.filter(d => d.Date >= dateParse("2021-04-15"))
+	// console.log(shorter_data)
+	var areaData = shorter_data.filter(d => {return d[xVar] <= keyData[keys[0]][keyData[keys[0]].length - 1][xVar] })
+	console.log("keydata", keyData)
+	console.log("areaData", areaData)
 
 	const area = d3.area()
       .x((d) => x(d[xVar]))
@@ -258,7 +261,7 @@ function init(results) {
       	return y(d[keys[0]])
 
       	})
-      .y1((d) => y(d[keys[2]]))
+      .y1((d) => y(d[keys[1]]))
 
 	// console.log("keyData",keyData)
 
@@ -366,50 +369,92 @@ function init(results) {
 
 		// console.log(keyData[key])
 
-		features.append("path")
-			.datum(keyData[key])
-			.attr("fill", "none")
-			.attr("stroke", function (d) { 
+		// if (key == "Trend" || key == "First dose by EOY") {
+			if (key == "Trend") {
+				
+			features.append("path")
+				.datum(keyData[key])
+				.attr("fill", "none")
+				.attr("stroke-dasharray","5,5")
+				.attr("stroke", function (d) { 
 					return color(key);
 				})
-			.attr("stroke-linejoin", "round")
-			.attr("stroke-linecap", "round")
-			.attr("stroke-width", 3)
-			.attr("d", lineGenerators[key]);
-
-
-		features
-          .append("circle")
-          .attr("cy", (d) => {
-            return y(keyData[key][keyData[key].length - 1][key])
-          })
-          .attr("fill", color(key))
-          .attr("cx", (d) => {
-            return x(keyData[key][keyData[key].length - 1][xVar])
-          })
-          .attr("r", 4)
-          .style("opacity", 1)	
+				// .attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 3)
+				.style("opacity", 0.3)
+				.attr("d", lineGenerators[key]);
+	
+	
+			features
+			  .append("circle")
+			  .attr("cy", (d) => {
+				return y(keyData[key][keyData[key].length - 1][key])
+			  })
+			  .attr("fill", color(key))
+			  .attr("cx", (d) => {
+				return x(keyData[key][keyData[key].length - 1][xVar])
+			  })
+			  .attr("r", 4)
+			  .style("opacity", 0.3)
+	
+			} else {
+	
+			// Make all the other lines 
+	
+			features.append("path")
+				.datum(keyData[key])
+				.attr("fill", "none")
+				.attr("stroke", function (d) { 
+						return color(key);
+					})
+				.attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 3)
+				.attr("d", lineGenerators[key]);
+	
+	
+			features
+			  .append("circle")
+			  .attr("cy", (d) => {
+				return y(keyData[key][keyData[key].length - 1][key])
+			  })
+			  .attr("fill", color(key))
+			  .attr("cx", (d) => {
+				return x(keyData[key][keyData[key].length - 1][xVar])
+			  })
+			  .attr("r", 4)
+			  .style("opacity", 1)	
+	
+			}
 
 
 
 		  if (isMobile) {
+			// if (!key.includes("Doses given")){
+				if (key != "Trend"){
 
-				var keyDiv = chartKey
-								.append("div")
-								.attr("class","keyDiv")
-		
-				keyDiv.append("span")
-					.attr("class", "keyCircle")
-					.style("background-color", function() {
-							return color(key);
-						}
-					)
-		
-				keyDiv.append("span")
-					.attr("class", "keyText")
-					.text(key)
-				console.log(key)
+					var keyDiv = chartKey
+									.append("div")
+									.attr("class","keyDiv")
+			
+					keyDiv.append("span")
+						.attr("class", "keyCircle")
+						.style("background-color", function() {
+								return color(key);
+							}
+						)
+			
+					keyDiv.append("span")
+						.attr("class", "keyText")
+						.text(key)
+					console.log(key)}
+					
 		  } else {
+
+
+			if (key.includes("Doses given") || key == "Revised rollout"){
+
         features
           .append("text")
           .attr("class", "lineLabels")
@@ -426,12 +471,36 @@ function init(results) {
           })
           .style("opacity", 1)
           .attr("fill", color(key))
+		//   .style("text-anchor", "middle")
           .text((d) => {
             return key
           })
 
-		  }
-       
+		  
+		} else {
+			features
+			.append("text")
+			.attr("class", "lineLabels")
+			.attr("y", (d) => {
+			  return (
+				y(keyData[key][keyData[key].length - 1][key]) +
+				4 
+			  )
+			})
+			.attr("x", (d) => {
+			  return (
+				x(keyData[key][keyData[key].length - 1][xVar]) - 10
+			  )
+			})
+			.style("opacity", 1)
+			.attr("fill", color(key))
+			.style("text-anchor", "end")
+			.text((d) => {
+			  return key
+			})
+
+		}
+	}
 
 	});	
 
@@ -582,7 +651,7 @@ function init(results) {
 
 
 Promise.all([
-	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/Covid_oz_vac_gap_two_goals_feed.json`)
+	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/oz_vaccine_tracker_goals_trend_three_trend.json`)
 	])
 	.then((results) =>  {
 		init(results[0])
