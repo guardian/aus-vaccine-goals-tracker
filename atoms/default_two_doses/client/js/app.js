@@ -280,7 +280,7 @@ function init(results) {
 
 	features.append("text")
 		// .attr("transform", "rotate(90)")
-		.attr("y", -10)
+		.attr("y", -15)
 		.attr("x", 0)
 		.attr("dy", "0.71em")
 		.attr("fill", "#767676")
@@ -362,8 +362,6 @@ function init(results) {
 	.attr("class", "keyLabel")
 	.text("70% of 16+ population")
 	.style("opacity", 0.5);
-
-
 
 
 		var greys = ["goal"]
@@ -568,11 +566,6 @@ function init(results) {
 	// Eight goal: 16495967.200000001
 	// Seven goal: 14433971.299999999
 
-
-
-
-
-
 	context.selectAll(".annotationBox").remove()
 	var footerAnnotations = context.select("#footerAnnotations")
     footerAnnotations.html("")
@@ -599,6 +592,11 @@ function init(results) {
 	    return dummyTextBox.node().getBoundingClientRect()
 	}
 
+	console.log(labels)
+
+	function cleanLabels(s) {
+		return s.replace(/<[^>]+>/g, '')
+	}
 
 	 labels.forEach( (d,i) => {
 
@@ -622,6 +620,30 @@ function init(results) {
         	labelY2 = y(d.y) - 6
   			textX = x(d.x) + margin.left - (textBoxWidth /2)
         	textY = y(d.y) - (d.offset * scaleFactor) + margin.top - getTextBoxSize(textBoxWidth, d.text).height - 5
+        	mobileYOffset = 0
+
+        	if (d.align === "middle") {
+        		textX = x(d.x) + margin.left - (textBoxWidth /2)
+        	}
+
+        	else if (d.align === "left") {
+        		textX = x(d.x) + margin.left - (textBoxWidth)
+        	}
+
+        	else if (d.align === "right") {
+        		textX = x(d.x) + margin.left - 10
+        	}
+
+        }
+
+       else if (d.direction === "bottom") {
+
+        	labelX1 = x(d.x)
+        	labelX2 = x(d.x)
+        	labelY1 = y(d.y) + (d.offset * scaleFactor)
+        	labelY2 = y(d.y) + 6
+  				textX = x(d.x) + margin.left - (textBoxWidth /2)
+        	textY = y(d.y) + (d.offset * scaleFactor) + margin.top 
         	mobileYOffset = 0
 
         	if (d.align === "middle") {
@@ -680,13 +702,13 @@ function init(results) {
 		if (i < labels.length -1 ) {
 			footerAnnotations.append("span")
 			.attr("class", "annotationFooterText")
-			.text(d.text + ", ");
+			.text(cleanLabels(d.text) + ", ");
 		}
 
 		else {
 			footerAnnotations.append("span")
 				.attr("class", "annotationFooterText")
-				.text(d.text);
+				.text(cleanLabels(d.text));
 		}
 
 
@@ -702,7 +724,7 @@ function init(results) {
         .style("width", textBoxWidth + "px")
         .style("top", textY + "px")
         .style("left", textX + "px")
-        .text(d.text)
+        .html(d.text)
 
 	}
 
