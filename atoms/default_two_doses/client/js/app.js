@@ -326,7 +326,7 @@ function init(results) {
 		// .style("stroke", "black")
 		.attr("stroke", "#000000")
 		.style("stroke-dasharray", ("5, 5"))
-		.style("opacity", 0.5)
+		.style("opacity", 0.3)
 
 		features.append("text")
 		// .attr("x", x(parseTime(Peak_date)))
@@ -336,7 +336,7 @@ function init(results) {
 		// .attr("class", "keyLabel").text(Math.round(min))
 		.attr("class", "keyLabel")
 		.text("80% of 16+ population")
-		.style("opacity", 0.5);
+		.style("opacity", 0.3);
 
 
 	// ### ADD 70% LINE
@@ -350,7 +350,7 @@ function init(results) {
 	// .style("stroke", "black")
 	.attr("stroke", "#000000")
 	.style("stroke-dasharray", ("5, 5"))
-	.style("opacity", 0.5)
+	.style("opacity", 0.3)
 
 
 	features.append("text")
@@ -361,7 +361,7 @@ function init(results) {
 	// .attr("class", "keyLabel").text(Math.round(min))
 	.attr("class", "keyLabel")
 	.text("70% of 16+ population")
-	.style("opacity", 0.5);
+	.style("opacity", 0.3);
 
 
 		var greys = ["goal"]
@@ -480,6 +480,7 @@ function init(results) {
 
 						keyDiv.append("span")
 							.attr("class", "keyText")
+							// .style("text-anchor", "end")
 							.text(key)
 
 					}
@@ -506,6 +507,7 @@ function init(results) {
           .style("opacity", 1)
           .attr("fill", color(key))
 		//   .style("text-anchor", "middle")
+		
           .text((d) => {
             return key
           })
@@ -743,6 +745,8 @@ function init(results) {
 
 Promise.all([
 	d3.json(`https://interactive.guim.co.uk/yacht-charter-data/oz_vaccine_tracker_goals_trend_five_trend.json`)
+	// d3.json(`https://interactive.guim.co.uk/yacht-charter-data/oz_vaccine_tracker_goals_trend_five_trend_test.json`)
+
 	])
 	.then((results) =>  {
 		init(results[0])
