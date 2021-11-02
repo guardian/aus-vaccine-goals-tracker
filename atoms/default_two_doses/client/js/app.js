@@ -315,6 +315,31 @@ function init(results) {
 
 	// var greys = ["goal", "EOY"]
 
+
+	// ### ADD 90% LINE
+		features.append("line")
+		.attr("x1", 0)
+		.attr("y1", y(18557963))
+		.attr("x2", width)
+		.attr("y2", y(18557963))
+		.attr("class", "baseline")
+		.style("stroke-width", 1)
+		// .style("stroke", "black")
+		.attr("stroke", "#000000")
+		.style("stroke-dasharray", ("5, 5"))
+		.style("opacity", 0.3)
+
+		features.append("text")
+		// .attr("x", x(parseTime(Peak_date)))
+		.attr("x", 5)
+		.attr("text-anchor", "start")
+		.attr("y", (y(18557963) - 5))
+		// .attr("class", "keyLabel").text(Math.round(min))
+		.attr("class", "keyLabel")
+		.text("90% of 16+ population")
+		.style("opacity", 0.3);
+
+
 	// ### ADD 80% LINE
 		features.append("line")
 		.attr("x1", 0)
@@ -507,7 +532,7 @@ function init(results) {
           .style("opacity", 1)
           .attr("fill", color(key))
 		//   .style("text-anchor", "middle")
-		
+
           .text((d) => {
             return key
           })
@@ -645,7 +670,7 @@ function init(results) {
         	labelY1 = y(d.y) + (d.offset * scaleFactor)
         	labelY2 = y(d.y) + 6
   				textX = x(d.x) + margin.left - (textBoxWidth /2)
-        	textY = y(d.y) + (d.offset * scaleFactor) + margin.top 
+        	textY = y(d.y) + (d.offset * scaleFactor) + margin.top
         	mobileYOffset = 0
 
         	if (d.align === "middle") {
