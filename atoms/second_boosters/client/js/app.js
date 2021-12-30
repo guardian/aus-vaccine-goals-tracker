@@ -7,9 +7,9 @@ function init(results) {
 	var details = clone.sheets.template
 	var labels = clone.sheets.labels
 	var userKey = clone['sheets']['key']
-	var breaks = "no"
 	var context = d3.select("#vaccineGoals")
 
+	// console.log(results)
 
 	function numberFormat(num) {
         if ( num > 0 ) {
@@ -43,7 +43,7 @@ function init(results) {
 	var width = document.querySelector("#graphicContainer").getBoundingClientRect().width
 	var height = width*0.6
 	var margin = {top: 20, right: 70, bottom: 20, left:40}
-	var dateParse = d3.timeParse(details[0]['dateFormat'])
+	var dateParse = d3.timeParse("%Y-%m-%d")
 
 	var scaleFactor = 1
 
@@ -51,11 +51,9 @@ function init(results) {
 		scaleFactor = windowWidth / 860
 	}
 
-	// console.log("scaleFactor",scaleFactor)
-
-
 	var keys = Object.keys(data[0])
 
+	console.log(keys)
 
 
 	function getLongestKeyLength(isMob) {
@@ -71,11 +69,10 @@ function init(results) {
     height = height - margin.top - margin.bottom;
 
 
-
 	context.select("#chartTitle").text(details[0].title)
     context.select("#subTitle").html(details[0].subtitle)
     context.select("#sourceText").html(details[0].source)
-    context.select("#footnote").html(details[0].footnote)
+    // context.select("#footnote").html(details[0].footnote)
     context.select("#graphicContainer svg").remove();
 
     var chartKey = context.select("#chartKey");
@@ -102,9 +99,7 @@ function init(results) {
 		keys.splice(0, 1);
 	}
 
-	// console.log(xVar, keys);
-
-	var colors = ["#d10a10", "#ea5a0b", "#cccccc","#d10a10"];
+	var colors = ["#7d0068", "#ea5a0b", "#d10a10","#7d0068"];
 
 	var color = d3.scaleOrdinal();
 
@@ -122,31 +117,17 @@ function init(results) {
 	var lineGenerators = {};
 	var allValues = [];
 
+	// console.log("Xvar", xVar)
 	keys.forEach(function(key,i) {
 
-		if (breaks === "yes") {
 		lineGenerators[key] = d3.line()
-			.defined(function(d) {
-        		return d;
-    		})
 			.x(function(d) {
 				return x(d[xVar]);
 				})
 			.y(function(d) {
 				return y(d[key]);
-			});
-		}
-
-		else if (breaks === "no") {
-			lineGenerators[key] = d3.line()
-				.x(function(d) {
-					return x(d[xVar]);
-					})
-				.y(function(d) {
-					return y(d[key]);
-				});
-		}
-
+			})
+		
 
 		data.forEach(function(d) {
 
@@ -183,34 +164,35 @@ function init(results) {
 
 	data.forEach(function(d) {
 		if (typeof d[xVar] == 'string') {
+			// console.log("key", d[xVar])
 			d[xVar] = dateParse(d[xVar])
+			// console.log("key", d[xVar])
 		}
 	})
 
 	var keyData = {}
 
 	keys.forEach(function(key,i) {
+
 		keyData[key] = []
 
 		data.forEach(function(d) {
+			// console.log("key", d[xVar])
 			if (d[key] != null) {
 				var newData = {}
 				newData[xVar] = d[xVar]
 				newData[key] = d[key]
 				keyData[key].push(newData)
 			}
-			else if (breaks == "yes") {
-				keyData[key].push(null)
-			}
+			// else if (breaks == "yes") {
+			// 	keyData[key].push(null)
+			// }
 
 		});
 	})
 
 	var shorter_data = data.filter(d => d.Date >= dateParse("2021-04-15"))
 	// console.log(shorter_data)
-	var areaData = shorter_data.filter(d => {return d[xVar] <= keyData[keys[0]][keyData[keys[0]].length - 1][xVar] })
-	// console.log("keydata", keyData)
-	// console.log("areaData", areaData)
 
 	labels.forEach(function(d,i) {
 		if (typeof d.x == 'string') {
@@ -237,9 +219,9 @@ function init(results) {
 	}
 
 
-
 	x.domain(d3.extent(data, function(d) { return d[xVar]; }));
-	y.domain([0, d3.max(allValues)])
+	// y.domain([0, d3.max(allValues)])
+	y.domain([0, 25000000])
 
 	var xAxis;
 	var yAxis;
@@ -257,17 +239,17 @@ function init(results) {
 	}
 
 
-	svg.append("svg:defs").append("svg:marker")
-		.attr("id", "arrow")
-		.attr("refX", 6)
-		.attr("refY", 6)
-		.attr("markerWidth", 20)
-		.attr("markerHeight", 20)
-		.attr("markerUnits","userSpaceOnUse")
-		.attr("orient", "auto")
-		.append("path")
-		.attr("d", "M 0 0 12 6 0 12 3 6")
-		.style("fill", "black")
+	// svg.append("svg:defs").append("svg:marker")
+	// 	.attr("id", "arrow")
+	// 	.attr("refX", 6)
+	// 	.attr("refY", 6)
+	// 	.attr("markerWidth", 20)
+	// 	.attr("markerHeight", 20)
+	// 	.attr("markerUnits","userSpaceOnUse")
+	// 	.attr("orient", "auto")
+	// 	.append("path")
+	// 	.attr("d", "M 0 0 12 6 0 12 3 6")
+	// 	.style("fill", "black")
 
 	features.append("g")
 		.attr("class","x")
@@ -303,49 +285,37 @@ function init(results) {
 	context.selectAll(".domain")
 		.attr("stroke", "#767676")
 
-	// var areaPath = features.selectAll(".areaPath").data()
-
-	// features.append("path")
-	// 		.datum(areaData)
-	// 		.attr("class", "areaPath")
-	// 		.attr("fill", "rgb(245, 189, 44)")
-	// 		.attr("opacity", 0.6)
-	// 		.attr("stroke", "none")
-	// 		.attr("d", area)
-
-	// var greys = ["goal", "EOY"]
-
-
+	// (20619959 + 1243990)*0.9
 	// ### ADD 90% LINE
 		features.append("line")
 		.attr("x1", 0)
-		.attr("y1", y(18557963))
+		.attr("y1", y(19677554))
 		.attr("x2", width)
-		.attr("y2", y(18557963))
+		.attr("y2", y(19677554))
 		.attr("class", "baseline")
 		.style("stroke-width", 1)
 		// .style("stroke", "black")
 		.attr("stroke", "#000000")
 		.style("stroke-dasharray", ("5, 5"))
-		.style("opacity", 0.3)
+		.style("opacity", 0.2)
 
 		features.append("text")
 		// .attr("x", x(parseTime(Peak_date)))
 		.attr("x", 5)
 		.attr("text-anchor", "start")
-		.attr("y", (y(18557963) - 5))
+		.attr("y", (y(19677554) - 5))
 		// .attr("class", "keyLabel").text(Math.round(min))
 		.attr("class", "keyLabel")
-		.text("90% of 16+ population")
+		.text("90% of 12+ population")
 		.style("opacity", 0.3);
 
 
 	// ### ADD 80% LINE
 		features.append("line")
 		.attr("x1", 0)
-		.attr("y1", y(16495967))
+		.attr("y1", y(17491159))
 		.attr("x2", width)
-		.attr("y2", y(16495967))
+		.attr("y2", y(17491159))
 		.attr("class", "baseline")
 		.style("stroke-width", 1)
 		// .style("stroke", "black")
@@ -357,35 +327,35 @@ function init(results) {
 		// .attr("x", x(parseTime(Peak_date)))
 		.attr("x", 5)
 		.attr("text-anchor", "start")
-		.attr("y", (y(16495967) - 5))
+		.attr("y", (y(17491159) - 5))
 		// .attr("class", "keyLabel").text(Math.round(min))
 		.attr("class", "keyLabel")
-		.text("80% of 16+ population")
+		.text("80% of 12+ population")
 		.style("opacity", 0.3);
 
 
 	// ### ADD 70% LINE
 	features.append("line")
 	.attr("x1", 0)
-	.attr("y1", y(14433971))
+	.attr("y1", y(15304764))
 	.attr("x2", width)
-	.attr("y2", y(14433971))
+	.attr("y2", y(15304764))
 	.attr("class", "baseline")
 	.style("stroke-width", 1)
 	// .style("stroke", "black")
 	.attr("stroke", "#000000")
 	.style("stroke-dasharray", ("5, 5"))
-	.style("opacity", 0.3)
+	.style("opacity", 0.2)
 
 
 	features.append("text")
 	// .attr("x", x(parseTime(Peak_date)))
 	.attr("x", 5)
 	.attr("text-anchor", "start")
-	.attr("y", (y(14433971) - 5))
+	.attr("y", (y(15304764) - 5))
 	// .attr("class", "keyLabel").text(Math.round(min))
 	.attr("class", "keyLabel")
-	.text("70% of 16+ population")
+	.text("70% of 12+ population")
 	.style("opacity", 0.3);
 
 
@@ -393,7 +363,7 @@ function init(results) {
 
 	keys.forEach(function(key,i) {
 
-		console.log("Key", key)
+		// console.log("Key", key)
 
 		if (greys.some(stringo => key.includes(stringo))){
 			// Make all the other lines
@@ -401,7 +371,7 @@ function init(results) {
 			features.append("path")
 				.datum(keyData[key])
 				.attr("fill", "none")
-				.attr("stroke", "#cccccc")
+				.attr("stroke", "#d10a10")
 				.attr("stroke-linejoin", "round")
 				.attr("stroke-linecap", "round")
 				.attr("stroke-width", 3)
@@ -414,19 +384,18 @@ function init(results) {
 				.attr("cy", (d) => {
 				return y(keyData[key][keyData[key].length - 1][key])
 				})
-				.attr("fill", "#cccccc")
+				.attr("fill", "#d10a10")
 				.attr("cx", (d) => {
 				return x(keyData[key][keyData[key].length - 1][xVar])
 				})
 				.attr("r", 4)
 				.style("opacity", 1)
 
-			console.log("testo", key)
+			// console.log("testo", key)
 
 		}
 
 
-		// if (key == "Trend" || key == "First dose by EOY") {
 			if (key == "Trend") {
 
 			features.append("path")
@@ -462,7 +431,7 @@ function init(results) {
 				features.append("path")
 					.datum(keyData[key])
 					.attr("fill", "none")
-					.attr("stroke", "#d10a10")
+					.attr("stroke", "#7d0068")
 					.attr("stroke-linejoin", "round")
 					.attr("stroke-linecap", "round")
 					.attr("stroke-width", 3)
@@ -473,7 +442,7 @@ function init(results) {
 				  .attr("cy", (d) => {
 					return y(keyData[key][keyData[key].length - 1][key])
 				  })
-				  .attr("fill", "#d10a10")
+				  .attr("fill", "#7d0068")
 				  .attr("cx", (d) => {
 					return x(keyData[key][keyData[key].length - 1][xVar])
 				  })
@@ -493,7 +462,7 @@ function init(results) {
 
 				keyDiv.append("span")
 					.attr("class", "keyCircle")
-					.style("background-color", "#cccccc")
+					.style("background-color", "#d10a10")
 
 				keyDiv.append("span")
 					.attr("class", "keyText")
@@ -502,7 +471,7 @@ function init(results) {
 
 						keyDiv.append("span")
 							.attr("class", "keyCircle")
-							.style("background-color", "#d10a10")
+							.style("background-color", "#7d0068")
 
 						keyDiv.append("span")
 							.attr("class", "keyText")
@@ -568,18 +537,18 @@ function init(results) {
 			.attr("class", "lineLabels")
 			.attr("y", (d) => {
 			  return (
-				y(keyData[key][keyData[key].length - 1][key]) +
-				4
+				y(keyData[key][keyData[key].length - 1][key]) -
+				10
 			  )
 			})
 			.attr("x", (d) => {
 			  return (
-				x(keyData[key][keyData[key].length - 1][xVar]) - 10
+				x(keyData[key][keyData[key].length - 1][xVar])
 			  )
 			})
 			.style("opacity",  0.5)
-			.attr("fill", "#cccccc")
-			.style("text-anchor", "end")
+			.attr("fill", "#d10a10")
+			.style("text-anchor", "middle")
 			.text((d) => {
 			  return key
 			})
@@ -588,11 +557,6 @@ function init(results) {
 	}
 
 	});
-
-
-
-	// Eight goal: 16495967.200000001
-	// Seven goal: 14433971.299999999
 
 	context.selectAll(".annotationBox").remove()
 	var footerAnnotations = context.select("#footerAnnotations")
@@ -630,63 +594,6 @@ function init(results) {
 
         var labelX1, labelX2, labelY1, labelY2,textX, textY, mobileYOffset;
 
-        if (d.direction === "right") {
-        	labelX1 = x(d.x) + (d.offset * scaleFactor)
-        	labelX2 = x(d.x) + 6
-        	labelY1 = y(d.y)
-        	labelY2 = y(d.y)
-        	textX = x(d.x) + (d.offset * scaleFactor) + margin.left + 5
-        	textY = y(d.y) + margin.top - 12
-        	mobileYOffset = 4
-        }
-
-        else if (d.direction === "top") {
-
-        	labelX1 = x(d.x)
-        	labelX2 = x(d.x)
-        	labelY1 = y(d.y) - (d.offset * scaleFactor)
-        	labelY2 = y(d.y) - 6
-  			textX = x(d.x) + margin.left - (textBoxWidth /2)
-        	textY = y(d.y) - (d.offset * scaleFactor) + margin.top - getTextBoxSize(textBoxWidth, d.text).height - 5
-        	mobileYOffset = 0
-
-        	if (d.align === "middle") {
-        		textX = x(d.x) + margin.left - (textBoxWidth /2)
-        	}
-
-        	else if (d.align === "left") {
-        		textX = x(d.x) + margin.left - (textBoxWidth)
-        	}
-
-        	else if (d.align === "right") {
-        		textX = x(d.x) + margin.left - 10
-        	}
-
-        }
-
-       else if (d.direction === "bottom") {
-
-        	labelX1 = x(d.x)
-        	labelX2 = x(d.x)
-        	labelY1 = y(d.y) + (d.offset * scaleFactor)
-        	labelY2 = y(d.y) + 6
-  				textX = x(d.x) + margin.left - (textBoxWidth /2)
-        	textY = y(d.y) + (d.offset * scaleFactor) + margin.top
-        	mobileYOffset = 0
-
-        	if (d.align === "middle") {
-        		textX = x(d.x) + margin.left - (textBoxWidth /2)
-        	}
-
-        	else if (d.align === "left") {
-        		textX = x(d.x) + margin.left - (textBoxWidth)
-        	}
-
-        	else if (d.align === "right") {
-        		textX = x(d.x) + margin.left - 10
-        	}
-
-        }
 
 		features
 		      .append("line")
@@ -739,8 +646,6 @@ function init(results) {
 				.text(cleanLabels(d.text));
 		}
 
-
-
 	}
 
 	else {
@@ -756,7 +661,84 @@ function init(results) {
 
 	}
 
+
+	
+
+
 	})
+
+	// ### Get the latest data for Boosters, and then draw a line to show the current gap 
+
+	// console.log("Shorts",shorter_data)
+
+	var booster_name = keys.filter(d => d.includes("Booster"))[0]
+	var second_name = keys.filter(d => d.includes("Second"))[0]
+
+	// ### Grab the current maximum number of boosters administered 
+	var latest_boosters = shorter_data.reduce(function(prev, current) {
+		return (prev[booster_name] > current[booster_name]) ? prev : current
+	}) 
+
+	var current_boosters = latest_boosters[booster_name]
+	var current_booster_date = latest_boosters['Date']
+
+	// ## Work out the equivalent day for second doses 
+	var eq_second = shorter_data.filter(d => d[second_name] >= current_boosters)
+
+	eq_second = eq_second.reduce(function(prev, current) {
+		return (prev["Date"] < current["Date"]) ? prev : current
+	})['Date']
+
+	var current_gap = (current_booster_date - eq_second)  / 86400000
+	var half_gap = current_gap / 2
+
+	// console.log('Booster date', current_booster_date)
+	// console.log("EQ second", eq_second)
+	// console.log("Current gap", current_gap)
+	console.log("Half gap", half_gap)
+	// ## Add arrow defintion and then arrow 
+
+	svg.append("svg:defs").append("svg:marker")
+		.attr("id", "arrow")
+		.attr("refX", 6)
+		.attr("refY", 6)
+		.attr("markerWidth", 15)
+		.attr("markerHeight", 15)
+		.attr("markerUnits","userSpaceOnUse")
+		.attr("orient", "auto-start-reverse")
+		.append("path")
+		.attr("d", "M 0 0 12 6 0 12 3 6")
+		.style("fill", "black")
+
+		features.append("line")
+		.attr("x1", x(eq_second) + 15)
+		.attr("y1", y(current_boosters))
+		.attr("x2", x(current_booster_date) - 15)
+		.attr("y2", y(current_boosters))
+		.attr("class", "baseline")
+		.style("stroke-width", 1)
+		// .style("stroke", "black")
+		.attr("stroke", "#000000")
+		.style("stroke-dasharray", ("5, 5"))
+		.style("opacity", 0.5)
+		.attr("marker-start","url(#arrow)")
+		.attr("marker-end","url(#arrow)")
+
+	
+		var half_date = new Date(eq_second)
+		half_date.setDate(half_date.getDate() + half_gap)
+		console.log("Eq  sec date again", eq_second)
+		console.log("Xers", half_date)
+
+
+
+		features.append("text")
+		.attr("x", x(half_date))
+		.attr("text-anchor", "middle")
+		.attr("y", (y(current_boosters) - 10))
+		.attr("class", "keyLabel")
+		.text(`${current_gap} days`)
+		.style("opacity", 0.5);
 
 }	// end init
 
