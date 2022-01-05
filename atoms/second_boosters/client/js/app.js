@@ -1,5 +1,6 @@
 import * as d3 from "d3"
 
+
 function init(results) {
 	const container = d3.select("#vaccineGoals #graphicContainer")
 	var clone = clone = JSON.parse(JSON.stringify(results));
@@ -737,8 +738,10 @@ function init(results) {
 		.attr("text-anchor", "middle")
 		.attr("y", (y(current_boosters) - 10))
 		.attr("class", "keyLabel")
-		.text(`${current_gap} days`)
+		.text(`${Math.round(current_gap)} days`)
 		.style("opacity", 0.5);
+
+		// console.log(current_gap, Math.round(current_gap))
 
 }	// end init
 
