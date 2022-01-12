@@ -286,13 +286,13 @@ function init(results) {
 	context.selectAll(".domain")
 		.attr("stroke", "#767676")
 
-	// (20619959 + 1243990)*0.9
+		// (20619959 + 1243990 + 2276638) * 0.9
 	// ### ADD 90% LINE
 		features.append("line")
 		.attr("x1", 0)
-		.attr("y1", y(19677554))
+		.attr("y1", y(21726528))
 		.attr("x2", width)
-		.attr("y2", y(19677554))
+		.attr("y2", y(21726528))
 		.attr("class", "baseline")
 		.style("stroke-width", 1)
 		// .style("stroke", "black")
@@ -304,19 +304,19 @@ function init(results) {
 		// .attr("x", x(parseTime(Peak_date)))
 		.attr("x", 5)
 		.attr("text-anchor", "start")
-		.attr("y", (y(19677554) - 5))
+		.attr("y", (y(21726528) - 5))
 		// .attr("class", "keyLabel").text(Math.round(min))
 		.attr("class", "keyLabel")
-		.text("90% of 12+ population")
+		.text("90% of 5+ population")
 		.style("opacity", 0.3);
 
 
 	// ### ADD 80% LINE
 		features.append("line")
 		.attr("x1", 0)
-		.attr("y1", y(17491159))
+		.attr("y1", y(19312469))
 		.attr("x2", width)
-		.attr("y2", y(17491159))
+		.attr("y2", y(19312469))
 		.attr("class", "baseline")
 		.style("stroke-width", 1)
 		// .style("stroke", "black")
@@ -328,36 +328,36 @@ function init(results) {
 		// .attr("x", x(parseTime(Peak_date)))
 		.attr("x", 5)
 		.attr("text-anchor", "start")
-		.attr("y", (y(17491159) - 5))
+		.attr("y", (y(19312469) - 5))
 		// .attr("class", "keyLabel").text(Math.round(min))
 		.attr("class", "keyLabel")
-		.text("80% of 12+ population")
+		.text("80% of 5+ population")
 		.style("opacity", 0.3);
 
 
-	// ### ADD 70% LINE
-	features.append("line")
-	.attr("x1", 0)
-	.attr("y1", y(15304764))
-	.attr("x2", width)
-	.attr("y2", y(15304764))
-	.attr("class", "baseline")
-	.style("stroke-width", 1)
-	// .style("stroke", "black")
-	.attr("stroke", "#000000")
-	.style("stroke-dasharray", ("5, 5"))
-	.style("opacity", 0.2)
+	// // ### ADD 70% LINE
+	// features.append("line")
+	// .attr("x1", 0)
+	// .attr("y1", y(16898410))
+	// .attr("x2", width)
+	// .attr("y2", y(16898410))
+	// .attr("class", "baseline")
+	// .style("stroke-width", 1)
+	// // .style("stroke", "black")
+	// .attr("stroke", "#000000")
+	// .style("stroke-dasharray", ("5, 5"))
+	// .style("opacity", 0.2)
 
 
-	features.append("text")
-	// .attr("x", x(parseTime(Peak_date)))
-	.attr("x", 5)
-	.attr("text-anchor", "start")
-	.attr("y", (y(15304764) - 5))
-	// .attr("class", "keyLabel").text(Math.round(min))
-	.attr("class", "keyLabel")
-	.text("70% of 12+ population")
-	.style("opacity", 0.3);
+	// features.append("text")
+	// // .attr("x", x(parseTime(Peak_date)))
+	// .attr("x", 5)
+	// .attr("text-anchor", "start")
+	// .attr("y", (y(16898410) - 5))
+	// // .attr("class", "keyLabel").text(Math.round(min))
+	// .attr("class", "keyLabel")
+	// .text("70% of 5+ population")
+	// .style("opacity", 0.3);
 
 
 	var greys = ["Second doses"]
@@ -731,6 +731,7 @@ function init(results) {
 		console.log("Eq  sec date again", eq_second)
 		console.log("Xers", half_date)
 
+		var months = current_gap/30
 
 
 		features.append("text")
@@ -738,7 +739,8 @@ function init(results) {
 		.attr("text-anchor", "middle")
 		.attr("y", (y(current_boosters) - 10))
 		.attr("class", "keyLabel")
-		.text(`${Math.round(current_gap)} days`)
+		// .text(`${Math.round(current_gap/30)} months`)
+		.text(`${months.toFixed(1)} months`)
 		.style("opacity", 0.5);
 
 		// console.log(current_gap, Math.round(current_gap))
