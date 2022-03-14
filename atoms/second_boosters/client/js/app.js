@@ -399,31 +399,31 @@ function init(results) {
 
 			if (key == "Trend") {
 
-			features.append("path")
-				.datum(keyData[key])
-				.attr("fill", "none")
-				.attr("stroke-dasharray","5,5")
-				.attr("stroke", function (d) {
-					return "#f5bd2c"
-				})
+			// features.append("path")
+			// 	.datum(keyData[key])
+			// 	.attr("fill", "none")
+			// 	.attr("stroke-dasharray","5,5")
+			// 	.attr("stroke", function (d) {
+			// 		return "#f5bd2c"
+			// 	})
 
-				.attr("stroke-linecap", "round")
-				.attr("stroke-width", 3)
-				.style("opacity", 0.5)
-				.attr("d", lineGenerators[key]);
+			// 	.attr("stroke-linecap", "round")
+			// 	.attr("stroke-width", 3)
+			// 	.style("opacity", 0.5)
+			// 	.attr("d", lineGenerators[key]);
 
 
-			features
-			  .append("circle")
-			  .attr("cy", (d) => {
-				return y(keyData[key][keyData[key].length - 1][key])
-			  })
-			  .attr("fill", "#f5bd2c")
-			  .attr("cx", (d) => {
-				return x(keyData[key][keyData[key].length - 1][xVar])
-			  })
-			  .attr("r", 4)
-			  .style("opacity", 0.5)
+			// features
+			//   .append("circle")
+			//   .attr("cy", (d) => {
+			// 	return y(keyData[key][keyData[key].length - 1][key])
+			//   })
+			//   .attr("fill", "#f5bd2c")
+			//   .attr("cx", (d) => {
+			// 	return x(keyData[key][keyData[key].length - 1][xVar])
+			//   })
+			//   .attr("r", 4)
+			//   .style("opacity", 0.5)
 
 			}
 
@@ -510,27 +510,27 @@ function init(results) {
 
 
 		} else if(key.includes("Trend")){
-			// console.log(key)
-			features
-			.append("text")
-			.attr("class", "lineLabels")
-			.attr("y", (d) => {
-			  return (
-				y(keyData[key][keyData[key].length - 1][key]) -
-				10
-			  )
-			})
-			.attr("x", (d) => {
-			  return (
-				x(keyData[key][keyData[key].length - 1][xVar])
-			  )
-			})
-			.style("opacity", 0.7)
-			.attr("fill", "#f5bd2c")
-			.style("text-anchor", "middle")
-			.text((d) => {
-			  return key
-			})
+			// // console.log(key)
+			// features
+			// .append("text")
+			// .attr("class", "lineLabels")
+			// .attr("y", (d) => {
+			//   return (
+			// 	y(keyData[key][keyData[key].length - 1][key]) -
+			// 	10
+			//   )
+			// })
+			// .attr("x", (d) => {
+			//   return (
+			// 	x(keyData[key][keyData[key].length - 1][xVar])
+			//   )
+			// })
+			// .style("opacity", 0.7)
+			// .attr("fill", "#f5bd2c")
+			// .style("text-anchor", "middle")
+			// .text((d) => {
+			//   return key
+			// })
 
 		} else if(key.includes("Second")){
 			features
