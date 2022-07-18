@@ -1,0 +1,33 @@
+@import "fonts";
+@import "mq";
+@import "palette";
+@import "chart";
+// @import "embed";
+// @import "enhancer";
+
+.interactive-atom {
+    margin: 0;
+    padding: 0;
+		
+		html {
+			
+			background: #ffffff 
+
+		}
+
+    #vaccineGoals {
+
+    	.annotationBox.left {
+    		text-align: right;
+    	}
+
+    	.annotationBox.right {
+    		text-align: left;
+    	}
+
+    	.annotationBox.middle {
+    		text-align: center;
+    	}
+ 
+    }
+}
